@@ -1,9 +1,7 @@
 # Sales-Forecasting---Rossmann-Dataset
 Rossmann Sales Forecasting using CatBoost. Features store-level vs. global aggregate modeling with time-series validation. Implements lag/momentum feature engineering, grid search tuning, and residual diagnostics. Validated via target shuffling to ensure zero data leakage and high model integrity.
 
-Sales Forecasting - Rossmann Dataset
-
-1.  Objectives
+## 1.  Objectives
 
 Two forecasting tasks were implemented:
 
@@ -17,7 +15,7 @@ train.csv, which contains daily sales records from January 2013 to July 2015 for
 store.csv, which provides extra information about each store such as store type, assortment, and competition details.
 
 
-2. Model Selection
+## 2. Model Selection
 
 CatBoost was selected because:
 
@@ -28,9 +26,9 @@ CatBoost was selected because:
 - No one-hot encoding was required.
 
 
-3. Objective 1: Store-Level Forecasting (Store 262)
+## 3. Objective 1: Store-Level Forecasting (Store 262)
 
-3.1 Data Setup
+### 3.1 Data Setup
 - Trained only on Store 262 data
 - Closed days and zero-sales days removed
 - Time-based train/test split:
@@ -39,7 +37,7 @@ CatBoost was selected because:
 - 15% of training data used for validation
 - Early stopping enabled
 
-3.2 Features Used
+### 3.2 Features Used
 - Temporal Features
 - DayOfWeek
 - Month
@@ -47,12 +45,12 @@ CatBoost was selected because:
 - WeekOfYear
 - IsWeekend
 
-3.3 Lag Features
+### 3.3 Lag Features
 - Lag1
 - Lag7
 - Rolling7
 
-3.4 Categorical Features
+### 3.4 Categorical Features
 - Promo
 - StateHoliday
 - SchoolHoliday
@@ -60,50 +58,50 @@ CatBoost was selected because:
 - Assortment
 - Customers was intentionally removed to prevent target leakage.
 
-3.5 Hyperparameter Tuning (Grid search):
+### 3.5 Hyperparameter Tuning (Grid search):
 - Iterations: 500, 1000
 - Learning rate: 0.05, 0.1
 - Depth: 4, 6, 8
 - Early stopping based on validation loss.
 
-3.6 Validation Check – Target Shuffling
+### 3.6 Validation Check – Target Shuffling
 - Target values were randomly shuffled
 - Model retrained
 - Performance dropped significantly
 - This confirmed the model was learning meaningful signal and not leakage.
 
-3.7 Results – Objective 1
+### 3.7 Results – Objective 1
 - Model captured overall sales trend
 - Persistent over-forecasting bias
 - Residuals consistently negative
 - Over-forecast range: approx. -250 to -2000
 
-3.8 Feature Importance (Top Drivers):
+### 3.8 Feature Importance (Top Drivers):
 - DayOfWeek (dominant feature)
 - StateHoliday
 - IsWeekend
 - Month / WeekOfYear
 
-3.9 Insight:
+### 3.9 Insight:
 - Calendar effects were significantly more predictive than store-specific attributes or competition features.
 - Systematic over-forecasting reduces suitability for operational decisions (inventory, staffing).
 
 
-4. Objective 2: Global Average Sales Forecasting
+## 4. Objective 2: Global Average Sales Forecasting
 
-4.1 Data Setup
+### 4.1 Data Setup
 - Sales aggregated per date (average across open stores)
 - Store-level categorical features removed
 - Same time-based split strategy as Objective 1
 
-4.2 Temporal Features
+### 4.2 Temporal Features
 - DayOfWeek
 - WeekOfYear
 - Month
 - Year
 - Linear time index
 
-4.3 Lag & Trend Features
+### 4.3 Lag & Trend Features
 - Lag1
 - Lag7
 - Rolling7
@@ -111,14 +109,14 @@ CatBoost was selected because:
 - SalesDiff1
 - SalesDiff7
 
-4.4 Results – Objective 2
+### 4.4 Results – Objective 2
 - Strong overall trend capture
 - Residuals centered around zero
 - No systematic bias
 - Most residuals within ±200
 - Some volatility on extreme spike days
 
-4.5. Feature Importance – Objective 2
+### 4.5. Feature Importance – Objective 2
 Most Important:
 - SalesDiff7
 - SalesDiff1
@@ -128,11 +126,11 @@ Low Importance:
 - Calendar features
 - Linear time trend
 
-4.6. Insight:
+### 4.6. Insight:
 Recent momentum (daily & weekly changes) is the strongest driver of aggregated sales.
 
 
-5. Key Takeaways of the entire project
+## 5. Key Takeaways of the entire project
 - Global-level has much healthier residual distribution
 - There is no consistent over- or under-forecasting for global-level forecasting
 - Store-level forecasting is harder and more prone to bias
@@ -142,7 +140,7 @@ Recent momentum (daily & weekly changes) is the strongest driver of aggregated s
 - Target shuffling validated absence of leakage
 
 
-6. What This Demonstrates
+## 6. What This Demonstrates
 - Time-series aware model evaluation
 - Prevention of data leakage
 - Practical hyperparameter tuning
